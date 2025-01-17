@@ -5,8 +5,8 @@ const mysql = require('mysql2'); //Esto es lo que permite la ejecución de SELEC
 const db = mysql.createConnection({
     host: 'localhost', //server donde esta la bd, para la bdlocales
     user: 'root',       
-    password: '197749172Ka',
-    database: 'Local_instance_MySQL91' 
+    password: '2143658790Bd',
+    database: 'KISS' 
 });
 
 //Para probar la conexión
@@ -19,5 +19,5 @@ db.connect((err) => {
 });
 
 //exportamos la conexión
-
 module.exports = db;
+
