@@ -75,4 +75,48 @@ app.post('/api/tabla-datos', (req, res) => {
     });
 });
 
+// FILTROS: Para que obtenga los posibles valores de cada filtro
+// Permitirá filtrar dinámicamenmte los datos segun los campos seleccionados.
+
+// ruta para poder obtener los valores
+app.get('/api/valores-filtro', (req, res) => {
+    const { tabla, campo } = req.query; //en esta linea hace que se obtenga los parametros
+    console.log(`Tabla: ${tabla}, Campo: ${campo}`); 
+
+    // valida si se dieron los parámetros necesarios
+    if (!tabla || !campo) {
+        return res.status(400).json({ error: 'Debe proporcionar la tabla y el campo.' });
+    }
+
+    // Consulta para obtener los valores q son unicos de un campo
+    const query = `SELECT DISTINCT ${campo} FROM ${tabla}`;
+
+    // ejecuta la consulta
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Error al obtener valores de filtro:', err);
+            res.status(500).json({ error: 'Error al obtener valores de filtro.' });
+        } else {
+            res.json(results); //envia al frontend
+        }
+    });
+});
+
+
+// Ruta para obtener los datos filtrados
+app.get('/api/datos', (req, res) => {
+    const filtro = req.query.filtro || ''; // Obtiene el filtro de la consulta (si existe)
+
+    const query = `SELECT * FROM Trabajador WHERE Cargo LIKE '%${filtro}%'`; // Filtra los datos por el campo Cargo
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Error al obtener los datos:', err);
+            res.status(500).json({ error: 'Error al obtener los datos' });
+        } else {
+            res.json(results); // Devuelve los datos filtrados al frontend
+        }
+    });
+});
+
 
